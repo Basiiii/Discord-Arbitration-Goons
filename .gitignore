@@ -1,0 +1,26 @@
+# Ignore virtual environment
+venv/
+env/
+
+# Ignore build
+build/
+build\
+
+# Ignore Python bytecode files
+**/__pycache__/
+*.pyc
+CurrentMap.json
+password.txt
+maps.json
+arbi_maps.json
+Launcher_log.py
+warframe_controller_2.py
+
+# Data sensitive files
+warframe_controller.py
+solNodes.json
+maps.json
+current_map.json
+arbi_maps.json
+config.json
+confirmation.json
