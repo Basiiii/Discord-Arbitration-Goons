@@ -12,6 +12,8 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from typing import List
+
 from helpers import checks
 
 # Dictionary of tiles and IDs
@@ -108,11 +110,17 @@ roles = {
 class Roles(commands.Cog, name="roles"):
     def __init__(self, bot):
         self.bot = bot
-
+        
+    async def node_autocomplete(self, interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+        node_list = list(roles.keys())
+        choices = [app_commands.Choice(name=choice, value=choice) for choice in node_list if current.lower() in choice.lower()][:25]
+        return choices
+    
     @commands.hybrid_command(
         name="node",
         description="Get a specific node role.",
     )
+    @app_commands.autocomplete(missionname=node_autocomplete)   
     async def tile(self, context: Context, *, missionname) -> None:
         """
         Get a specific node role.

@@ -122,26 +122,25 @@ async def on_ready() -> None:
     """
     Event handler for when the bot is ready to run.
     """
-    print("\n\n")
-    print_info("Loading bot:")
+    print_info("\nLoading bot:")
     print(f"Logged in as {bot.user.name}")
     print(f"Discord.py API version: {discord.__version__}")
     print(f"Python version: {platform.python_version()}")
     print(f"Running on: {platform.system()} {platform.release()} ({os.name})")
     print("Arbitration Goons bot is now online.")
     if config["sync_commands_globally"]:
-        print_info("Syncing commands globally...")
+        print_info("\nSyncing commands globally...")
         await bot.tree.sync()
-    print_info("Starting tasks:")
+    print_info("\nStarting tasks:")
     print("Starting arbitration notification task...")
     arbi_task.start()
-    print("Notification task is now running every 30 seconds.")
+    print("Notification task is now running every 30 seconds.\n")
 
 async def load_extensions():
     """
     Loads cogs from the cogs folder.
     """
-    print_info("Loading cogs:")
+    print_info("\nLoading cogs:")
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             # cut off the .py from the file name
@@ -493,7 +492,10 @@ async def get_node_id(node):
         'Callisto': "1100779444450373726",
         'Larzac': "1100782407189274784",
         'Hyf': "1100782443319001169",
-        'Tyana Pass': "1113634607456333895"
+        'Tyana Pass': "1113634607456333895",
+        'Munio': "1184871637347209227",
+        'Persto': "1184871712152633464",
+        'Cambire': "1184871782524665906"
     }
 
     return node_dict.get(node, None)
@@ -503,9 +505,10 @@ Construct and send arbitration embed to notification channel.
 """
 @tasks.loop(seconds=30)
 async def arbi_task():
+    print("")
     try:
         global last_end_time
-        print_info("\nChecking for new arbitration...")
+        print_info("Checking for new arbitration...")
 
         # After restart, the bot will check last sent arbi and initialize last_end_time
         if last_end_time == None:
