@@ -59,7 +59,7 @@ Channel ID's
 """
 log_channel_id = config["log_channel_id"]
 announcements_channel_id = config["announcement_channel_id"]
-
+bot_channel_id = config["bot_channel_id"] # "config_channel_id" : 1203129631130259497
 """
 Debug mode
 """
@@ -401,7 +401,23 @@ async def send_arbitration(node_id, tier, channel, embed):
             print_fatal(f"Failed to publish arbitration: {response.content}")
     else:
         print_info("New arbitration sent to channel.")
-
+async def send_bot_arbitration(node_id, tier, channel, embed, type):
+    tier_roles = {
+        "S": "1100498062843064381",
+        "A": "1100498068832522240",
+        "B": "1100498072024395916",
+        "C": "1100498074226405616",
+        "D": "1100508358852759683",
+        "F": "1100498076461977650"
+    }
+    role_id = tier_roles.get(tier)
+    if role_id and node_id:
+        message = await channel.send(f"<@1079718235936673812>\n<@&{role_id}> <@&{node_id}>", embed=embed)
+    elif role_id and not node_id:
+        message = await channel.send(f"<@1079718235936673812>\n<@&{role_id}>", embed=embed)
+    else:
+        message = await channel.send(f"<@1079718235936673812>\n",embed=embed)
+    print_info("New arbitration sent to bot channel.")
 """
 Get discord role ID for the Node.
 """
@@ -539,11 +555,11 @@ async def arbi_task():
         embed = create_arbi_embed(end_time, enemy_type, node, planet, tileset, mission_type, tier, embed_color, dark_sector_bonus)
         
         channel = bot.get_channel(announcements_channel_id)
-        
+        bot_channel = bot.get_channel(bot_channel_id)
         node_id = await get_node_id(node)
 
         await send_arbitration(node_id, tier, channel, embed)
-
+        await send_bot_arbitration(node_id, tier, bot_channel, embed)
         log_data_to_json(end_time, enemy_type, node, planet, tileset, mission_type, tier, embed_color, dark_sector_bonus)
             
         await bot.change_presence(activity=discord.Game(f"Current Arbi: {node} ({planet})"))
